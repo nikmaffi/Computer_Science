@@ -1,24 +1,34 @@
-APP=test.exe
-
 CC=gcc
+DB=gdb
 
-INCLUDE=-I.
-RELEASE=-O2
-DEBUG=-ggdb -Wall -Wextra
+CFLAGS=-Wall -Wextra -Iinclude
+DEBUG_FLAGS=-g$(DB) -DDEBUG -fsanitize=address
+RELEASE_FLAGS=-O2 -s -DNDEBUG
 
-MAIN=main.c
-OBJS=quick_sort.o
+SRC_DIR=src
+OBJ_DIR=obj
+BIN_DIR=bin
+INCLUDE_DIR=include
 
-all: $(APP)
+SRCS=$(wildcard $(SRC_DIR)/*.c)
+OBJS=$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
-%.o: %.c %.h
-	$(CC) $(RELEASE) $(INCLUDE) -c $<
+BIN=$(BIN_DIR)/quick_sort
 
-$(APP): $(MAIN) $(OBJS)
-	$(CC) $(RELEASE) $(INCLUDE) -o $@ $^
+all: debug
 
-debug:
-	$(CC) $(DEBUG) $(INCLUDE) -o $(APP) *.c
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+debug: CFLAGS+=$(DEBUG_FLAGS)
+debug: $(BIN)
+
+release: CFLAGS+=$(RELEASE_FLAGS)
+release: clean
+release: $(BIN)
+
+$(BIN): $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	rm $(APP) *.o
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*

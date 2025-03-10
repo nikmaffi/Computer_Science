@@ -1,24 +1,34 @@
 CC=gcc
 DB=gdb
-CFLAGS=-Wall -Wextra -ggdb -Iinclude
 
-APP=bin/list.out
-OBJS=obj/main.o obj/list.o
+CFLAGS=-Wall -Wextra -Iinclude
+DEBUG_FLAGS=-g$(DB) -DDEBUG -fsanitize=address
+RELEASE_FLAGS=-O2 -s -DNDEBUG
 
-all: build run
+SRC_DIR=src
+OBJ_DIR=obj
+BIN_DIR=bin
+INCLUDE_DIR=include
 
-release: CFLAGS=-O2 -Wall -Iinclude
+SRCS=$(wildcard $(SRC_DIR)/*.c)
+OBJS=$(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
+
+BIN=$(BIN_DIR)/linked_list
+
+all: debug
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+debug: CFLAGS+=$(DEBUG_FLAGS)
+debug: $(BIN)
+
+release: CFLAGS+=$(RELEASE_FLAGS)
 release: clean
-release: all
+release: $(BIN)
 
-obj/%.o: src/%.c
-	$(CC) $(CFLAGS) -o $@ -c $^
-
-build: $(OBJS)
-	$(CC) $(CFLAGS) -o $(APP) $^
-
-run:
-	./$(APP)
+$(BIN): $(OBJS)
+	$(CC) $(CFLAGS) $^ -o $@
 
 clean:
-	rm $(APP) $(OBJS)
+	rm -rf $(OBJ_DIR)/* $(BIN_DIR)/*

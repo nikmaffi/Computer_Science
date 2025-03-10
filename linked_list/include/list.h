@@ -1,6 +1,10 @@
 #ifndef __LIST_H__
 #define __LIST_H__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #include <stddef.h>
 
 #define LIST_SUCCESS 0
@@ -29,5 +33,9 @@ int popl(struct List *l, void *data);
 int deletel(struct List *l, unsigned i);
 size_t diml(struct List *l);
 void freel(struct List *l);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //__LIST_H__
