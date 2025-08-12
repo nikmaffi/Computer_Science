@@ -1,7 +1,7 @@
 CC=gcc
 DB=gdb
 
-CFLAGS=-Wall -Wextra -Iinclude
+CFLAGS=-Wall -Wextra -I$(INCLUDE_DIR)
 DEBUG_FLAGS=-g$(DB) -DDEBUG -fsanitize=address
 RELEASE_FLAGS=-O2 -s -DNDEBUG
 
