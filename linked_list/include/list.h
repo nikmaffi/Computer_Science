@@ -14,25 +14,28 @@ extern "C" {
 #define INSERTL_FAILED -4
 #define LIST_OVERFLOW -5
 
-struct Node {
+#define LIST_SUCCESS        0
+#define LIST_MALLOC_FAILED -1
+#define LIST_POP_FAILED    -2
+
+struct node {
     void *data;
-    struct Node *next;
+    struct node *next;
 };
 
-struct List {
+struct list {
     size_t size;
-    struct Node *head;
+    struct node *head;
 };
 
-struct List *newl(size_t size);
-int appendl(struct List *l, void *data);
-int pushl(struct List *l, void *data);
-int insertl(struct List *l, void *data, unsigned i);
-void *getl(struct List *l, unsigned i);
-int popl(struct List *l, void *data);
-int deletel(struct List *l, unsigned i);
-size_t diml(struct List *l);
-void freel(struct List *l);
+struct list *new_list(size_t size);
+int append_list(struct list *l, const void *data);
+int append_sort_list(struct list *l, const void *data, int (*compare)(const void *, const void *));
+int insert_list(struct list *l, size_t index, const void *data);
+void *get_list(struct list *l, size_t index);
+int remove_list(struct list *l, size_t index, void *data);
+size_t size_list(struct list *l);
+void free_list(struct list *l);
 
 #ifdef __cplusplus
 }

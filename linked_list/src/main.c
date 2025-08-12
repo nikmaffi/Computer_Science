@@ -1,19 +1,22 @@
 #include <stdio.h>
+
 #include <list.h>
 
 int main() {
-    struct List *l = newl(sizeof(int));
-    int num = 0;
+    struct list *l = new_list(sizeof(int));
+	int *p = NULL;
+	int num = 0;
 
     for(int k = 1; k <= 10; k++) {
-        appendl(l, &k);
+        append_list(l, &k);
     }
 
-    while(popl(l, &num) != LIST_EMPTY) {
-        printf("%d ", num);
-    }
+	while((p = (int *)get_list(l, num++)) != NULL) {
+		printf("%d ", *p);
+	}
+	puts("");
 
-    freel(l);
+    free_list(l);
 
     return 0;
 }
